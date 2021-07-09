@@ -8,7 +8,9 @@ A full-function CRM with chat capabilities.
 
 [Installation Instructions](./documentation/installation-instructions.md)
 
-[Architecture](./documentation/architecture.md)
+[Software Requirements](./documentation/requirements.md)
+
+[Domain Modeling](documentation/domain.md)
 
 [Testing](./documentation/testing.md)
 

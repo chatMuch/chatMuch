@@ -1,6 +1,4 @@
-
-
-# chatMuch
+# Team Agreement
 
 [Back to README](../README.md)
 
