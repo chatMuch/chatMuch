@@ -2,7 +2,7 @@
 
 # chatMuch
 
-[Back to README](README.md)
+[Back to README](../README.md)
 
 A full-function CRM with chat capabilities.
 
