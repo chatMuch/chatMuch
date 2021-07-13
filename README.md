@@ -1,5 +1,8 @@
 # chatMuch
 
+![David DM](https://david-dm.org/chatMuch/chatMuch.svg) 
+![Last Commit](https://img.shields.io/github/last-commit/chatMuch/chatMuch)
+
 chatMuch is a full-function CRM with chat capabilities. It runs on Node.js with Express, and supports role-based access control. Access control lists are backed up by basic and bearer auth. 
 
 ---
@@ -18,10 +21,10 @@ chatMuch is a full-function CRM with chat capabilities. It runs on Node.js with 
 [Testing](./documentation/testing.md)
 
 ---
-## Creators
+## Contributors
 
-- Cullen Sharp
+- [Cullen Sharp](https://www.linkedin.com/in/cullensharp/)
 - Tyler Johnson
-- Dion Johnson
-- Sunny Lee
+- [Dion Johnson](https://www.linkedin.com/in/dionjwa/)
+- [Sunny Lee](https://www.linkedin.com/in/sunnylee3/)
 - [Tim Egorov](https://www.linkedin.com/in/timegorov/)
