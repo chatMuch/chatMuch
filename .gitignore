@@ -4,6 +4,7 @@ db
 temp
 build
 *.zip
+memory
 
 # Created by https://www.gitignore.io/api/vim,osx,node,linux,windows
 ### Linux ###
