@@ -26,7 +26,7 @@ chatMuch is a full-function CRM with chat capabilities. It runs on Node.js with 
 ## Contributors
 
 - [Cullen Sharp](https://www.linkedin.com/in/cullensharp/)
-- Tyler Johnson
+- [Tyler Johnson](https://www.linkedin.com/in/tyler-a-johnson-wa/)
 - [Dion Johnson](https://www.linkedin.com/in/dionjwa/)
 - [Sunny Lee](https://www.linkedin.com/in/sunnylee3/)
 - [Tim Egorov](https://www.linkedin.com/in/timegorov/)
