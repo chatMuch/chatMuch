@@ -67,15 +67,18 @@ async function handleCreate(req, res) {
 async function handleUpdate(req, res) {
   const id = req.params.id;
   const obj = req.body;
+  // console.log('PUT request obj', obj, id);
   let record = await req.model.findOne({ where: { id:id }});
+  // console.log('PUT record', record);
   let updatedRecord = await record.update(obj);
-  res.status(204).json(updatedRecord);
+  // console.log('PUT updatedRecord', updatedRecord);
+  res.status(202).json(updatedRecord);
 }
 
 async function handleDelete(req, res) {
   let id = req.params.id;
   let deletedRecord = await req.model.destroy({ where: { id:id }});
-  res.status(204).json(deletedRecord);
+  res.status(202).json(deletedRecord);
 }
 
 
