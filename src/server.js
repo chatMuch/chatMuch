@@ -1,11 +1,13 @@
 'use strict';
 
 //express server
+const {Server} = require('socket.io');
 const cors = require('cors');
 const express = require('express');
 const app = express();
 const httpServer = require('http').createServer(app);
-const io = require('socket.io')(httpServer, {});
+// const io = require('socket.io')(httpServer, {});
+const server = new Server(3001, {cors:{origin:['http://localhost:3002'], methods:['GET']}});
 
 // Esoteric Resources
 const errorHandler = require('./error-handlers/500.js');
@@ -14,7 +16,7 @@ const authRoutes = require('./routes/auth/routes.js');
 const v2Routes = require('./routes/v2');
 
 //socketServer
-const chat = io.of('/chat');
+const chat = server.of('/chat');
 
 chat.on('connection', (socket) => {
   //room message of user joining room
@@ -25,7 +27,7 @@ chat.on('connection', (socket) => {
   //chat message sent;
   socket.on('chat', (data) => {
     console.log(data);
-    server.emit('chat', data);
+    chat.broadcast.emit('chat', data);
   });
 
 
