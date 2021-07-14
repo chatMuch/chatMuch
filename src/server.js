@@ -27,7 +27,7 @@ chat.on('connection', (socket) => {
   //chat message sent;
   socket.on('chat', (data) => {
     console.log(data);
-    chat.broadcast.emit('chat', data);
+    chat.emit('chat', data);
   });
 
 
