@@ -20,6 +20,8 @@ chatMuch is a full-function CRM with chat capabilities. It runs on Node.js with 
 
 [Testing](./documentation/testing.md)
 
+[Wireframes](./documentation/wireframes.md)
+
 ---
 ## Contributors
 
