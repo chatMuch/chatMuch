@@ -15,7 +15,7 @@ afterAll(async () => {
 });
 
 
-// tests start here //
+// ROUTE tests and Error tests start here //
 describe('testing routes', () => {
 
   const testUser = {
@@ -23,6 +23,14 @@ describe('testing routes', () => {
     username: 'testUser',
     password: 'password',
     role: 'salesPerson',
+    token: '',
+  };
+
+  const testUser2 = {
+    id: 2,
+    username: 'Account Manager',
+    password: 'password',
+    // role: 'NONE',
     token: '',
   };
 
@@ -40,6 +48,14 @@ describe('testing routes', () => {
     email: 'testcustomer2@aol.net',
     phone: '999-999-9999',
     jobTitle: 'President of Topo Chico',
+  };
+
+  const testCustomer3 = {
+    salesPerson: 1,
+    name: 'testCustomer3',
+    email: 'testcustomer3@aol.io',
+    phone: '111-111-1111',
+    jobTitle: 'Unemployed',
   };
 
 
@@ -89,18 +105,18 @@ describe('testing routes', () => {
   // can POST a customer and GET all customers associated with a sales person
   test('can GET and POST to /api/v2/customers associated with a sales person', async () => {
     const newCustomers = await request.post('/api/v2/customers')
-    .auth(testUser.token, { type: 'bearer'})
-    .send(testCustomer);
+      .auth(testUser.token, { type: 'bearer' })
+      .send(testCustomer);
 
     const newCustomers2 = await request.post('/api/v2/customers')
-    .auth(testUser.token, { type: 'bearer'})
-    .send(testCustomer2);
+      .auth(testUser.token, { type: 'bearer' })
+      .send(testCustomer2);
 
-    
+
     console.log('😎 newCustomers', newCustomers.body, newCustomers2.body);
 
     //this is getting all accounts associated with salesPerson id: 1
-    const response = await request.get('/api/v2/customers/1').auth(testUser.token, { type: 'bearer'});
+    const response = await request.get('/api/v2/customers/1').auth(testUser.token, { type: 'bearer' });
 
     console.log('all customers for salesperson 1:', response.body);
 
@@ -114,12 +130,12 @@ describe('testing routes', () => {
   });
 
 
-// PUT request, updates customer
+  // PUT request, updates customer
   test('can update an existing customer', async () => {
     testCustomer.jobTitle = 'VP of San Pellegrino';
 
-    const response = await request.put('/api/v2/customers/1').auth(testUser.token, { type: 'bearer'}).send(testCustomer);
-    
+    const response = await request.put('/api/v2/customers/1').auth(testUser.token, { type: 'bearer' }).send(testCustomer);
+
     console.log('PUT for testCustomer', testCustomer);
     // console.log(response);
 
@@ -130,22 +146,89 @@ describe('testing routes', () => {
   });
 
 
-// DELETE, deletes customer
+  // DELETE, deletes customer
   test('can DELETE an existing customer', async () => {
     let response = await request.delete('/api/v2/customers/1')
-    .auth(testUser.token, { type: 'bearer'});
+      .auth(testUser.token, { type: 'bearer' });
 
     console.log('🌳 response body for delete:', response.body);
 
     expect(response.status).toBe(202);
     expect(response.body.name).toBe('testCustomer');
-    
-    response = await request.get('/api/v2/customers/1').auth(testUser.token, { type: 'bearer'});
-    
+
+    response = await request.get('/api/v2/customers/1').auth(testUser.token, { type: 'bearer' });
+
     console.log('😏 post delete', response.body);
     expect(response.body.length).toBe(1);
 
   });
 
+
+
+  // === === 404 on a bad route === === //
+  test('Testing 404 on a bad route', async () => {
+    const response = await request.get('/badroute');
+
+    expect(response.status).toEqual(404);
+  });
+
+
+  // === === 404 on a bad method === === //
+  test('Testing 404 on a bad method', async () => {
+    const response = await request.put('/customer');
+
+    expect(response.status).toEqual(404);
+  });
+
+
+  // === === 500 if accessing users without being logged in === === //
+  test('500 if accessing users without being logged in', async () => {
+    const response = await request.get('/users');
+
+    expect(response.status).toEqual(500);
+  });
+
+
+  // === === 500 if accessing customers without being logged in === === //
+  test('500 if accessing customers without being logged in', async () => {
+    const response = await request.get('/api/v2/customers');
+
+    expect(response.status).toEqual(500);
+  });
+
+
+  // // ACL 403, invalid credentials
+  // test('ACL 403 invalid credentials', async () => {
+
+  //   //AM signup
+  //   let response = await request.post('/signup').send(testUser2);
+  //   console.log('😁 response body', response.body);
+
+  //   //AM signin
+  //   response = await request.post('/signin').auth(testUser2.username, testUser2.password);
+  //   console.log('🤑 post signin', response.body);
+
+  //   // AM customer GET attempt
+  //   response = await request.get('/api/v2/customers/1').auth(testUser2.token, { type: 'bearer' });
+  //   console.log('customer get', response.body)
+
+
+  // AM customer POST attempt
+  // const newCustomers = await request.post('/api/v2/customers')
+  //   .auth(testUser2.token, { type: 'bearer' })
+  //   .send(testCustomer3);
+
+  // console.log('🥱AM new customer attempt', newCustomers.body);
+
+
+  // AM customer PUT attempt
+  // testCustomer.jobTitle = 'Unemployed';
+  // response = await request.put('/api/v2/customers/1').auth(testUser.token, { type: 'bearer' }).send(testCustomer);
+
+
+
+
+  //   expect(response.status).toEqual(403);
+  // });
 
 });
