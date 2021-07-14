@@ -4,7 +4,7 @@ const supertest = require('supertest');
 const app = require('../src/server.js');
 const request = supertest(app.server);
 const { db } = require('../src/models/index.js');
-// const userModel = require('../src/models/auth/users.js');
+
 
 beforeAll(async () => {
   await db.sync();
@@ -14,24 +14,32 @@ afterAll(async () => {
   await db.drop();
 });
 
+
+// tests start here //
 describe('testing routes', () => {
 
   const testUser = {
+    id: 1,
     username: 'testUser',
     password: 'password',
     role: 'salesPerson',
     token: '',
-    id: 1,
   };
 
   const testCustomer = {
     salesPerson: 1,
-    // id: 1,
     name: 'testCustomer',
     email: 'testcustomer@aol.gov',
     phone: '555-555-5555',
     jobTitle: 'VP of Perrier',
+  };
 
+  const testCustomer2 = {
+    salesPerson: 1,
+    name: 'testCustomer2',
+    email: 'testcustomer2@aol.net',
+    phone: '999-999-9999',
+    jobTitle: 'President of Topo Chico',
   };
 
 
@@ -80,14 +88,21 @@ describe('testing routes', () => {
 
   // can POST a customer and GET all customers associated with a sales person
   test('can GET and POST to /api/v2/customers associated with a sales person', async () => {
-    const newCustomer = await request.post('/api/v2/customers').auth(testUser.token, { type: 'bearer'}).send(testCustomer);
+    const newCustomers = await request.post('/api/v2/customers')
+    .auth(testUser.token, { type: 'bearer'})
+    .send(testCustomer);
+
+    const newCustomers2 = await request.post('/api/v2/customers')
+    .auth(testUser.token, { type: 'bearer'})
+    .send(testCustomer2);
+
     
-    console.log('newCustomer', newCustomer.body);
+    console.log('😎 newCustomers', newCustomers.body, newCustomers2.body);
 
     //this is getting all accounts associated with salesPerson id: 1
     const response = await request.get('/api/v2/customers/1').auth(testUser.token, { type: 'bearer'});
 
-    console.log('this is the response.body for api/v2/customers', response.body);
+    console.log('all customers for salesperson 1:', response.body);
 
 
     expect(response.status).toBe(200);
@@ -99,17 +114,36 @@ describe('testing routes', () => {
   });
 
 
+// PUT request, updates customer
   test('can update an existing customer', async () => {
     testCustomer.jobTitle = 'VP of San Pellegrino';
 
     const response = await request.put('/api/v2/customers/1').auth(testUser.token, { type: 'bearer'}).send(testCustomer);
     
-    console.log(testCustomer);
+    console.log('PUT for testCustomer', testCustomer);
     // console.log(response);
 
 
     expect(response.status).toBe(202);
     expect(response.body.jobTitle).toEqual('VP of San Pellegrino');
+
+  });
+
+
+// DELETE, deletes customer
+  test('can DELETE an existing customer', async () => {
+    let response = await request.delete('/api/v2/customers/1')
+    .auth(testUser.token, { type: 'bearer'});
+
+    console.log('🌳 response body for delete:', response.body);
+
+    expect(response.status).toBe(202);
+    expect(response.body.name).toBe('testCustomer');
+    
+    response = await request.get('/api/v2/customers/1').auth(testUser.token, { type: 'bearer'});
+    
+    console.log('😏 post delete', response.body);
+    expect(response.body.length).toBe(1);
 
   });
 
