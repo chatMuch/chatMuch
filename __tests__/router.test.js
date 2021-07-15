@@ -4,14 +4,27 @@ const supertest = require('supertest');
 const app = require('../src/server.js');
 const request = supertest(app.server);
 const { db } = require('../src/models/index.js');
+const ioClient = require('socket.io-client');
+const http = require('http');
+const ioBackend = require('socket.io');
+
+let socket;
+let httpServer;
+let httpServerAddr;
+let ioServer;
 
 
 beforeAll(async () => {
   await db.sync();
+  httpServer = http.createServer().listen();
+  httpServerAddr = httpServer.address();
+  ioServer = ioBackend(httpServer);
 });
 
 afterAll(async () => {
   await db.drop();
+  ioServer.close();
+  httpServer.close();
 });
 
 
@@ -205,39 +218,48 @@ describe('testing routes', () => {
     expect(response.status).toEqual(500);
   });
 
+});
 
-  // // ACL 403, invalid credentials
-  // test('ACL 403 invalid credentials', async () => {
+describe('testing socket.io', () => {
+  
+  beforeEach((done) => {
+    socket = ioClient.connect(`http://[${httpServerAddr.address}]:${httpServerAddr.port}`, {
+      'reconnection delay': 0,
+      'reopen delay': 0,
+      'force new connection': true,
+      transports: ['websocket'],
+    });
+    socket.on('connect', () => {
+      done();
+    })
+  })
 
-  //   //AM signup
-  //   let response = await request.post('/signup').send(testUser2);
-  //   console.log('😁 response body', response.body);
+  test('should connect and communicate', (done) => {
+    ioServer.emit('echo', 'Hello from ioServer');
+    socket.once('echo', (res) => {
+      expect(res).toBe('Hello from ioServer');
+      done();
+    });
+    ioServer.on('connection', (mySocket) => {
+      expect(mySocket).toBeDefined();
+    })
+  });
 
-  //   //AM signin
-  //   response = await request.post('/signin').auth(testUser2.username, testUser2.password);
-  //   console.log('🤑 post signin', response.body);
+  test('should communicate with waiting for socket.io handshakes', (done) => {
+    socket.emit('example', 'some messages');
+    setTimeout((message) => {
+      ioServer.on('connection', (mySocket) => {
+        expect(mySocket).toBeDefined();
+      })
+      done();
+    }, 50);
+  });
 
-  //   // AM customer GET attempt
-  //   response = await request.get('/api/v2/customers/1').auth(testUser2.token, { type: 'bearer' });
-  //   console.log('customer get', response.body)
-
-
-  // AM customer POST attempt
-  // const newCustomers = await request.post('/api/v2/customers')
-  //   .auth(testUser2.token, { type: 'bearer' })
-  //   .send(testCustomer3);
-
-  // console.log('🥱AM new customer attempt', newCustomers.body);
-
-
-  // AM customer PUT attempt
-  // testCustomer.jobTitle = 'Unemployed';
-  // response = await request.put('/api/v2/customers/1').auth(testUser.token, { type: 'bearer' }).send(testCustomer);
-
-
-
-
-  //   expect(response.status).toEqual(403);
-  // });
+  afterEach((done) => {
+    if (socket.connected) {
+      socket.disconnect();
+    }
+    done();
+  });
 
 });
