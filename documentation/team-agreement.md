@@ -1,14 +1,6 @@
-# Team Agreement
+## Team Agreement
 
 [Back to README](../README.md)
-
-A full-function CRM with chat capabilities.
-
-## Team Members
-
-Cullen Sharp, Sunny Lee, Dion Johnson, Tyler Johnson, Tim Egorov
-
-## Team Agreement
 
 ### Cooperation Plan
 
