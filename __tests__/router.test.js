@@ -115,8 +115,8 @@ describe('testing routes', () => {
   });
 
 
-  // can POST a customer and GET all customers associated with a sales person
   test('can GET and POST to /api/v2/customers associated with a sales person', async () => {
+    // this POSTs a customers associated with a sales person
     const newCustomers = await request.post('/api/v2/customers')
       .auth(testUser.token, { type: 'bearer' })
       .send(testCustomer);
@@ -141,6 +141,15 @@ describe('testing routes', () => {
     expect(response.body[0].jobTitle).toEqual('VP of Perrier');
 
   });
+
+
+  // tests a GET to a SINGLE customer by route
+  test('can GET to /:model/:salespersonid/:customerid', async () => {
+    const response = await request.get('/api/v2/customers/1/1').auth(testUser.token, { type: 'bearer' });
+
+    expect(response.body.name).toEqual('testCustomer');
+  });
+
 
 
   // PUT request, updates customer
