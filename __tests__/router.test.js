@@ -4,14 +4,28 @@ const supertest = require('supertest');
 const app = require('../src/server.js');
 const request = supertest(app.server);
 const { db } = require('../src/models/index.js');
+const ioClient = require('socket.io-client');
+const http = require('http');
+const ioBackend = require('socket.io');
+const { doesNotMatch } = require('assert');
+
+let socket;
+let httpServer;
+let httpServerAddr;
+let ioServer;
 
 
 beforeAll(async () => {
   await db.sync();
+  httpServer = http.createServer().listen();
+  httpServerAddr = httpServer.address();
+  ioServer = ioBackend(httpServer);
 });
 
 afterAll(async () => {
   await db.drop();
+  ioServer.close();
+  httpServer.close();
 });
 
 
@@ -230,5 +244,69 @@ describe('testing routes', () => {
 
   //   expect(response.status).toEqual(403);
   // });
+
+});
+
+describe('testing socket.io', () => {
+
+  beforeEach((done) => {
+    socket = ioClient.connect(`http://[${httpServerAddr.address}]:${httpServerAddr.port}`, {
+      'reconnection delay': 0,
+      'reopen delay': 0,
+      'force new connection': true,
+      transports: ['websocket'],
+    });
+    socket.on('connect', () => {
+      done();
+    })
+  })
+
+  test('should connect and communicate', (done) => {
+    ioServer.emit('echo', 'Hello from ioServer');
+    socket.once('echo', (res) => {
+      expect(res).toBe('Hello from ioServer');
+      done();
+    });
+    ioServer.on('connection', (mySocket) => {
+      expect(mySocket).toBeDefined();
+    })
+  });
+
+  afterEach((done) => {
+    if (socket.connected) {
+      socket.disconnect();
+    }
+    done();
+  });
+
+  beforeEach((done) => {
+    socket = ioClient.connect(`http://[${httpServerAddr.address}]:${httpServerAddr.port}`, {
+      'reconnection delay': 0,
+      'reopen delay': 0,
+      'force new connection': true,
+      transports: ['websocket'],
+    });
+    socket.on('connect', () => {
+      done();
+    })
+  })
+
+  test('should communicate with waiting for socket.io handshakes', (done) => {
+    socket.emit('example', 'some messages');
+    setTimeout((message) => {
+      ioServer.on('connection', (mySocket) => {
+        expect(mySocket).toBeDefined();
+      })
+      done();
+    }, 50);
+  });
+
+  afterEach((done) => {
+    if (socket.connected) {
+      socket.disconnect();
+    }
+    done();
+  });
+
 
 });
