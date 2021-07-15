@@ -18,22 +18,22 @@ chatMuch is a full-function CRM with chat capabilities. It runs on Node.js with 
 ## Table of Contents
 
 
-[Installation and Startup](#🚀-getting-started)
+[Installation and Startup](#getting-started)
 
-[Routes](#🛣-routes)
+[Routes](#routes)
 
-[Software Requirements](#✔-software-requirements)
+[Software Requirements](#software-requirements)
 
-[Domain Modeling](#📇-domain-modeling)
+[Domain Modeling](#domain-modeling)
 
-[Testing](#🧪-testing)
+[Testing](#testing)
 
-[Team Agreement](#🤝-team-agreement)
+[Team Agreement](#team-agreement)
 
-[Other Wireframes](#👨‍🏫-other-wireframes)
+[Other Wireframes](#other-wireframes)
 
 ---
-## 🚀 Getting Started 
+## Getting Started 
 
 To install chatMuch, follow these steps:
 
@@ -45,7 +45,7 @@ To install chatMuch, follow these steps:
 
 
 ---
-## 🛣 Routes
+## Routes
 
 [Back to Top](#chatmuch)
 
@@ -411,7 +411,7 @@ To install chatMuch, follow these steps:
 
 ---
 
-## ✔ Software Requirements
+## Software Requirements
 
 [Back to Top](#chatmuch)
 
@@ -505,7 +505,7 @@ We are incorporating BasicAuth for security purposes. Admins will determine whic
 
 ---
 
-## 📇 Domain Modeling
+## Domain Modeling
 
 [Back to Top](#chatmuch)
 
@@ -540,7 +540,7 @@ We are incorporating BasicAuth for security purposes. Admins will determine whic
 ![Schema diagram](./assets/UML2.JPG)
 
 ---
-## 🧪 Testing
+## Testing
 
 [Back to Top](#chatmuch)
 
@@ -548,7 +548,7 @@ Here is information about our testing.
 
 --- 
 
-## 🤝 Team Agreement
+## Team Agreement
 
 [Back to Top](#chatmuch)
 
@@ -688,7 +688,7 @@ ACP but every new feature will live on a different branch. Dev branch and produc
     We will slack each other when a major feature is ready to be merged, and we will have a review at the end of each day.
 
 ---
-## 👨‍🏫 Other Wireframes
+## Other Wireframes
 
 [Back to Top](#chatmuch)
 
