@@ -7,7 +7,6 @@ const { db } = require('../src/models/index.js');
 const ioClient = require('socket.io-client');
 const http = require('http');
 const ioBackend = require('socket.io');
-const { doesNotMatch } = require('assert');
 
 let socket;
 let httpServer;
@@ -272,24 +271,24 @@ describe('testing socket.io', () => {
     })
   });
 
-  afterEach((done) => {
-    if (socket.connected) {
-      socket.disconnect();
-    }
-    done();
-  });
+  // afterEach((done) => {
+  //   if (socket.connected) {
+  //     socket.disconnect();
+  //   }
+  //   done();
+  // });
 
-  beforeEach((done) => {
-    socket = ioClient.connect(`http://[${httpServerAddr.address}]:${httpServerAddr.port}`, {
-      'reconnection delay': 0,
-      'reopen delay': 0,
-      'force new connection': true,
-      transports: ['websocket'],
-    });
-    socket.on('connect', () => {
-      done();
-    })
-  })
+  // beforeEach((done) => {
+  //   socket = ioClient.connect(`http://[${httpServerAddr.address}]:${httpServerAddr.port}`, {
+  //     'reconnection delay': 0,
+  //     'reopen delay': 0,
+  //     'force new connection': true,
+  //     transports: ['websocket'],
+  //   });
+  //   socket.on('connect', () => {
+  //     done();
+  //   })
+  // })
 
   test('should communicate with waiting for socket.io handshakes', (done) => {
     socket.emit('example', 'some messages');
