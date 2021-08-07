@@ -6,6 +6,7 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 const httpServer = require('http').createServer(app);
+
 // const io = require('socket.io')(httpServer, {});
 const server = new Server(3001, {cors:{origin:['http://localhost:3002'], methods:['GET']}});
 
