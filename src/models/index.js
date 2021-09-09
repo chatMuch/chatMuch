@@ -10,11 +10,25 @@ const noteModel = require('./resources/notes/model');
 const userModel = require('./auth/users.js');
 const { Model } = require('sequelize');
 
-const DATABASE_URL = process.env.DATABASE_URL || 'sqlite:memory:';
+const DATABASE_URL = process.env.DATABASE_URL;
 
 
 // create tables
-const sequelize = new Sequelize(DATABASE_URL);
+let sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect:'postgres',
+  protocol:'postgres',
+  dialectOptions:{
+     ssl: {
+       require: true,
+       rejectUnauthorized: false,
+     }
+  }
+});
+
+sequelize.sync().then (() => {
+  console.log('Success');
+});
+
 const notes = noteModel(sequelize, DataTypes);
 const customers = customerModel(sequelize, DataTypes);
 const users = userModel(sequelize, DataTypes);
